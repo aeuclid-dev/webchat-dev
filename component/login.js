@@ -12,7 +12,7 @@ export default class LoginView extends Component {
     }
 
     logout(userid){
-        fetch(`http://192.168.0.148:8080/v1/user/logout/${userid}`)
+        fetch(`http://ec2-13-124-80-213.ap-northeast-2.compute.amazonaws.com:8080/v1/user/logout/${userid}`)
             .then(o => {
                 if(o.status !== 200) {
                     Alert.alert("force logout", "fail");
@@ -24,7 +24,7 @@ export default class LoginView extends Component {
     }
 
     login(userid) {
-        fetch(`http://192.168.0.148:8080/v1/user/login/${userid}`)
+        fetch(`http://ec2-13-124-80-213.ap-northeast-2.compute.amazonaws.com:8080/v1/user/login/${userid}`)
             .then(o => {
                 console.log(o.status);
                 if(o.status === 200) {

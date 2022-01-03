@@ -26,15 +26,13 @@ export default class UserListView extends Component {
 
   fetch() {
     
-    fetch(`http://192.168.0.148:8080/v1/user/list?offset=${this.offset}&limit=${this.limit}`)
+    fetch(`http://ec2-13-124-80-213.ap-northeast-2.compute.amazonaws.com:8080/v1/user/list?offset=${this.offset}&limit=${this.limit}`)
         .then(response => response.json())
         .then(o => {
             this.offset = this.offset + o.length;
             o.map((value, index) => {
-                // console.log(index, value);
                 this.state.users.push(value);
                 this.setState({users: this.state.users});
-                // console.log(`http://192.168.0.148:8080${value.profile}`);
             });
         })
         .catch(e => console.log(e));
@@ -42,8 +40,8 @@ export default class UserListView extends Component {
 
   render() {
     const renderItem = (o) => {
-      return (<UserCardView profile={{uri: `http://192.168.0.148:8080${o.item.profile}`}}
-                        picture={{uri: `http://192.168.0.148:8080${o.item.picture}`}}
+      return (<UserCardView profile={{uri: `http://ec2-13-124-80-213.ap-northeast-2.compute.amazonaws.com:8080${o.item.profile}`}}
+                        picture={{uri: `http://ec2-13-124-80-213.ap-northeast-2.compute.amazonaws.com:8080${o.item.picture}`}}
                         username={o.item.username}
                         index={o.index}
                         key={o.index}

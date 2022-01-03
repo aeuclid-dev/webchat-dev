@@ -25,7 +25,7 @@ export default class UserCardView extends Component {
   logout(userid) {
     console.log(User.ID);
     if(userid === User.ID) {
-      fetch(`http://192.168.0.148:8080/v1/user/logout/${userid}`)
+      fetch(`http://ec2-13-124-80-213.ap-northeast-2.compute.amazonaws.com:8080/v1/user/logout/${userid}`)
         .then(o => {
           if(o.status === 200) {
             this.props.navigation.navigate('Login');

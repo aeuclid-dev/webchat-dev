@@ -72,7 +72,7 @@ export default class UserChatView extends Component {
 
     async webSocketInit() {
         console.log("web socket init");
-        this.client = new WebSocket("ws://192.168.0.148:8080/ws");
+        this.client = new WebSocket("ws://ec2-13-124-80-213.ap-northeast-2.compute.amazonaws.com:8080/ws");
 
         this.client.onopen = (e => this.onWebSocketOpen(e));
         this.client.onmessage = (e => this.onWebSocketMessage(e));
@@ -180,8 +180,8 @@ export default class UserChatView extends Component {
             </View> */}
                 <UserProfileView
                     username={this.props.route.params.item.username}
-                    profile={{uri: `http://192.168.0.148:8080${this.props.route.params.item.profile}`}}
-                    picture={{uri: `http://192.168.0.148:8080${this.props.route.params.item.picture}`}}
+                    profile={{uri: `http://ec2-13-124-80-213.ap-northeast-2.compute.amazonaws.com:8080${this.props.route.params.item.profile}`}}
+                    picture={{uri: `http://ec2-13-124-80-213.ap-northeast-2.compute.amazonaws.com:8080${this.props.route.params.item.picture}`}}
                     userid={this.props.route.params.item.userid}>{this.props.route.params.item.text}</UserProfileView>
                 <View style={{flexDirection: "row"}}>
                     <TextInput placeholder="useless placeholder" style={{borderStyle:"solid",
