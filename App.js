@@ -14,10 +14,9 @@ export default class App extends Component {
 
   }
 
-
   render() {
     return (<NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Navigator>
         <Stack.Screen
           Key={1}
           name="Login"

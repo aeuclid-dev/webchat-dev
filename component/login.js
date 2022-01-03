@@ -11,6 +11,13 @@ export default class LoginView extends Component {
         super(props);
     }
 
+    componentWillUnmount(){
+        console.log("login", "unmount");
+        if(User.ID) {
+            this.logout(User.ID);
+        }
+    }
+
     logout(userid){
         fetch(`http://ec2-13-124-80-213.ap-northeast-2.compute.amazonaws.com:8080/v1/user/logout/${userid}`)
             .then(o => {

@@ -61,7 +61,7 @@ export default class UserChatView extends Component {
     }
 
     componentWillUnmount() {
-        console.log("unmount");
+        console.log("chat", "unmount");
         this.client.close();
         // this.connection.close();
         this.connection = null;
