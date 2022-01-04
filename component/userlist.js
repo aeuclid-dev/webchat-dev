@@ -39,6 +39,11 @@ export default class UserListView extends Component {
     }
   }
 
+  onInvite(o) {
+    console.log("on invite");
+    Alert.alert("INVITE", `from: ${o.from}, to: ${o.to}`);
+  }
+
   logout(userid){
     
     fetch(`${Environment.server}/v1/user/logout/${userid}`)

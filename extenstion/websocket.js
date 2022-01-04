@@ -71,6 +71,7 @@ export default class WebSocketExt {
     }
 
     static send(message) {
+        console.log(WebSocketExt._client);
         if(WebSocketExt._client.readyState !== WebSocketExt._client.OPEN || WebSocketExt._queue.length > 0) {
             WebSocketExt._queue.push(message);
 

@@ -18,8 +18,9 @@ export default class UserCardView extends Component {
 
   move(){
     console.log("invite");
+    console.log(this.props.userid);
 
-    WebSocketExt.send(JSON.stringify({type: 'invite', user: this.props.userid}));
+    WebSocketExt.send(JSON.stringify({type: 'invite', to: this.props.userid, from: User.ID}));
 
     // if(this.props.userid !== User.ID) {
     //   this.props.navigation.navigate('Chat', this.props.obj)
