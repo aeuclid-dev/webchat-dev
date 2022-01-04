@@ -116,7 +116,7 @@ export default class UserChatView extends Component {
             }
         });
         const connection = new RTCPeerConnection(configuration);
-        
+        connection.addStream(stream);
 
         connection.onicecandidate = e => this.onIceCandidate(this.props.route.params.userid, e);
         connection.oniceconnectionstatechange =  e => this.onIceConnectionStateChange(this.props.route.params.userid, e);
@@ -132,7 +132,7 @@ export default class UserChatView extends Component {
             connection: connection,
         });
 
-        connection.addStream(stream);
+        
 
         WebSocketExt.send(JSON.stringify({type: 'answer', from: User.ID, to: o.from, message: answer}));
     }
@@ -162,7 +162,7 @@ export default class UserChatView extends Component {
                 }
             });
             const connection = new RTCPeerConnection(configuration);
-            
+            connection.addStream(stream);
 
             connection.onicecandidate = e => this.onIceCandidate(this.props.route.params.userid, e);
             connection.oniceconnectionstatechange =  e => this.onIceConnectionStateChange(this.props.route.params.userid, e);
@@ -178,7 +178,7 @@ export default class UserChatView extends Component {
                 connection: connection,
             });
 
-            connection.addStream(stream);
+            
 
             console.log("web rtc done");
         }
