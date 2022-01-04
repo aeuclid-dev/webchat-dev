@@ -58,7 +58,7 @@ export default class UserChatView extends Component {
         WebSocketExt.onAnswer = (o => this.onAnswer(o));
 
         console.log("mount");
-        if(this.state.stream){
+        if(!this.state.stream){
             this.webRtcInit()
                 .then(o => console.log(o))
                 .catch(e => console.log(e));
@@ -110,10 +110,7 @@ export default class UserChatView extends Component {
             }
         });
         const connection = new RTCPeerConnection(configuration);
-        console.log(1);
-        // connection.addStream(stream);
-        console.log(2);
-        // stream.getTracks().forEach(track => connection.addTrack(track, stream));
+        connection.addStream(stream);
 
         connection.onicecandidate = e => this.onIceCandidate(this.props.route.params.userid, e);
         connection.oniceconnectionstatechange =  e => this.onIceConnectionStateChange(this.props.route.params.userid, e);
@@ -145,6 +142,7 @@ export default class UserChatView extends Component {
                     break;
                 }
             }
+
             const stream = await mediaDevices.getUserMedia({
                 audio: true,
                 video: {
@@ -156,8 +154,7 @@ export default class UserChatView extends Component {
                 }
             });
             const connection = new RTCPeerConnection(configuration);
-            // connection.addStream(stream);
-            // stream.getTracks().forEach(track => connection.addTrack(track, stream));
+            connection.addStream(stream);
 
             connection.onicecandidate = e => this.onIceCandidate(this.props.route.params.userid, e);
             connection.oniceconnectionstatechange =  e => this.onIceConnectionStateChange(this.props.route.params.userid, e);
