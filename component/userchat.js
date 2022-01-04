@@ -177,6 +177,8 @@ export default class UserChatView extends Component {
             this.state.stream = stream;
             const connection = new RTCPeerConnection(configuration);
             this.connection = connection;
+            this.candidates.forEach(o => this.connection.addIceCandidate(o));
+            this.candidates = [];
             this.setState({
                 stream: stream
             });
