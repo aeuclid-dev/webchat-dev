@@ -24,6 +24,7 @@ export default class UserListView extends Component {
     this.fetch();
     console.log("mount");
     WebSocketExt.onRefresh = (o => this.fetch());
+    WebSocketExt.onInvite = (o => this.onInvite(o));
 
     WebSocketExt.connect();
   }
@@ -41,7 +42,19 @@ export default class UserListView extends Component {
 
   onInvite(o) {
     console.log("on invite");
-    Alert.alert("INVITE", `from: ${o.from}, to: ${o.to}`);
+    Alert.alert("INVITE", `from: ${o.from}, to: ${o.to}`,
+                [
+                  {text: "ok", onPress: () => {
+                    o.type = "invited";
+                    o.result = "ok";
+                    WebSocketExt.send(JSON.stringify(o));
+                  }},
+                  {text: "cancel", onPress: () => {
+                    o.type = "invited";
+                    o.result = "cancel";
+                    WebSocketExt.send(JSON.stringify(o));
+                  }},
+                ]);
   }
 
   logout(userid){
