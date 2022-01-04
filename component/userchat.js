@@ -110,7 +110,9 @@ export default class UserChatView extends Component {
             }
         });
         const connection = new RTCPeerConnection(configuration);
-        connection.addStream(stream);
+        console.log(1);
+        // connection.addStream(stream);
+        console.log(2);
         // stream.getTracks().forEach(track => connection.addTrack(track, stream));
 
         connection.onicecandidate = e => this.onIceCandidate(this.props.route.params.userid, e);
@@ -154,7 +156,7 @@ export default class UserChatView extends Component {
                 }
             });
             const connection = new RTCPeerConnection(configuration);
-            connection.addStream(stream);
+            // connection.addStream(stream);
             // stream.getTracks().forEach(track => connection.addTrack(track, stream));
 
             connection.onicecandidate = e => this.onIceCandidate(this.props.route.params.userid, e);
