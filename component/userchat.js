@@ -51,6 +51,8 @@ export default class UserChatView extends Component {
         this.state = {
             stream: null,
         };
+
+        this.candidates = [];
     }
 
     componentDidMount() {
@@ -68,7 +70,11 @@ export default class UserChatView extends Component {
 
     onCandidate(o){
         console.log(this.connection);
-        this.connection.addIceCandidate(o.candidate);
+        if(this.connection) {
+            this.connection.addIceCandidate(o.candidate);
+        } else {
+            this.candidates.push(o.candidate);
+        }
     }
 
     componentWillUnmount() {
@@ -120,6 +126,8 @@ export default class UserChatView extends Component {
         this.state.stream = stream;
         const connection = new RTCPeerConnection(configuration);
         this.connection = connection;
+        this.candidates.forEach(o => this.connection.addIceCandidate(o));
+        this.candidates = [];
         this.setState({
             stream: stream
         });
@@ -133,10 +141,6 @@ export default class UserChatView extends Component {
         const answer = await connection.createAnswer();
         await connection.setLocalDescription(answer);
         console.log("send answer");
-
-
-
-        
 
         WebSocketExt.send(JSON.stringify({type: 'answer', from: User.ID, to: o.from, message: answer}));
     }
