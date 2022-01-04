@@ -6,6 +6,7 @@ import User from "../data/user";
 import UserCardView from "./usercard";
 
 import Environment from "../data/environment";
+import WebSocketExt from "../extenstion/websocket";
 
 export default class UserListView extends Component {
   constructor(props) {
@@ -21,12 +22,19 @@ export default class UserListView extends Component {
 
   componentDidMount() {
     this.fetch();
-    // console.log(1);
+    console.log("mount");
+    WebSocketExt.connect();
   }
 
   componentWillUnmount() {
-    console.log("list", "unmount");
-    this.logout(User.ID);
+    // this.logout(User.ID);
+    console.log("unmount");
+    WebSocketExt.disconnect();
+    if(User.ID) {
+      const id = User.ID;
+      User.ID = null;
+      this.logout(id);
+    }
   }
 
   logout(userid){
@@ -42,14 +50,17 @@ export default class UserListView extends Component {
   }
 
   fetch() {
-    
     fetch(`${Environment.server}/v1/user/list?offset=${this.offset}&limit=${this.limit}`)
         .then(response => response.json())
         .then(o => {
             this.offset = this.offset + o.length;
+            this.state.users = [];
             o.map((value, index) => {
-                this.state.users.push(value);
-                this.setState({users: this.state.users});
+                console.log(value);
+                if(value.userid !== User.ID) {
+                  this.state.users.push(value);
+                  this.setState({users: this.state.users});
+                }
             });
         })
         .catch(e => console.log(e));

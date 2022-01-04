@@ -6,29 +6,34 @@ import UserView from "./user";
 import { users } from "../data/users";
 import User from "../data/user";
 import Environment from "../data/environment";
+import WebSocketExt from "../extenstion/websocket";
 
 export default class LoginView extends Component {
     constructor(props) {
         super(props);
+
+        
     }
 
-    componentWillUnmount(){
-        console.log("login", "unmount");
+    componentDidMount() {
         if(User.ID) {
-            this.logout(User.ID);
+            const id = User.ID;
+            User.ID = null;
+            this.logout(id);
         }
     }
 
+    componentWillUnmount(){
+        if(User.ID) {
+            const id = User.ID;
+            User.ID = null;
+            this.logout(id);
+        }
+        WebSocketExt.disconnect();
+    }
+
     logout(userid){
-        fetch(`${Environment.server}/v1/user/logout/${userid}`)
-            .then(o => {
-                if(o.status !== 200) {
-                    Alert.alert("force logout", "fail");
-                } else {
-                    Alert.alert("force logout", "ok");
-                }
-            })
-            .catch(e => console.log(e));
+        fetch(`${Environment.server}/v1/user/logout/${userid}`);
     }
 
     login(userid) {
