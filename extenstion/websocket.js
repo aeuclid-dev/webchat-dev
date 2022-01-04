@@ -7,8 +7,8 @@ export default class WebSocketExt {
     static onRefresh = null;
     static onInvite = null;
     static onInvited = null;
-
     static onOffer = null;
+
 
     static get client() {
         return WebSocketExt._client;
@@ -63,6 +63,10 @@ export default class WebSocketExt {
         } else if(json.type === "invited") {
             if(WebSocketExt.onInvited) {
                 WebSocketExt.onInvited(json);
+            }
+        } else if(json.type === "offer") {
+            if(WebSocketExt.onOffer) {
+                WebSocketExt.onOffer(json);
             }
         }
     }

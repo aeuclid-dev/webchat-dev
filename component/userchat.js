@@ -54,6 +54,8 @@ export default class UserChatView extends Component {
     }
 
     componentDidMount() {
+        WebSocketExt.onOffer = (o => this.onOffer(o));
+
         console.log("mount");
         this.webRtcInit()
             .then(o => console.log(o))
@@ -65,6 +67,14 @@ export default class UserChatView extends Component {
 
         this.connection = null;
         this.state.stream = null;
+    }
+
+    async onOffer(o) {
+        await this.state.connection.setRemoteDescription(new RTCSessionDescription(o.message));
+        const answer = await this.state.connection.createAnswer();
+        await this.state.connection.setLocalDescription(answer);
+        console.log("send answer");
+        WebSocketExt.send(JSON.stringify({type: 'answer', from: User.ID, to: o.from, message: answer}));
     }
 
     async webRtcInit() {
