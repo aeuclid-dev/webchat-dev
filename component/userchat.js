@@ -100,6 +100,9 @@ export default class UserChatView extends Component {
 
     onAddStream(to, e) {
         console.log("=================================>", "add stream");
+        console.log(e);
+
+        this.setState({stream: e.stream});
     }
 
     async onAnswer(o) {
