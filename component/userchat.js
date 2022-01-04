@@ -98,6 +98,10 @@ export default class UserChatView extends Component {
         this.state.stream = e.streams[0];
     }
 
+    onAddStream(to, e) {
+        console.log("=================================>", "add stream");
+    }
+
     async onAnswer(o) {
         await this.connection.setRemoteDescription(new RTCSessionDescription(o.message));
     }
@@ -136,6 +140,7 @@ export default class UserChatView extends Component {
         connection.onicecandidate = e => this.onIceCandidate(this.props.route.params.userid, e);
         connection.oniceconnectionstatechange =  e => this.onIceConnectionStateChange(this.props.route.params.userid, e);
         connection.ontrack = e => this.onTrack(this.props.route.params.userid, e);
+        connection.onaddstream = e => this.onAddStream(this.props.route.params.userid, e);
         // console.log(o.message);
         await connection.setRemoteDescription(new RTCSessionDescription(o.message));
         const answer = await connection.createAnswer();
