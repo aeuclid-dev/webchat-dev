@@ -28,6 +28,8 @@ import {
     mediaDevices,
     registerGlobals
   } from 'react-native-webrtc';
+import User from '../data/user';
+import WebSocketExt from '../extenstion/websocket';
 
 const user =   {
     username: "Aiden Chavez",
@@ -44,12 +46,8 @@ const configuration = {"iceServers": [{"url": "stun:stun.l.google.com:19302"}]};
 export default class UserChatView extends Component {
     constructor(props) {
         super(props);
-//        console.log(this.props.route.params);
 
-        this.queue = [];
         this.connection = null,
-        this.client = null;
-
         this.state = {
             stream: null,
         };
@@ -57,72 +55,16 @@ export default class UserChatView extends Component {
 
     componentDidMount() {
         console.log("mount");
-        Promise.all(this.webSocketInit(), this.webRtcInit())
-               .then(o => console.log(o))
-               .catch(e => console.log(e));
+        this.webRtcInit()
+            .then(o => console.log(o))
+            .catch(e => console.log(e));
     }
 
     componentWillUnmount() {
         console.log("chat", "unmount");
-        this.client.close();
-        // this.connection.close();
+
         this.connection = null;
         this.state.stream = null;
-    }
-
-
-
-    async webSocketInit() {
-        console.log("web socket init");
-        this.client = new WebSocket(Environment.websocketServer);
-
-        this.client.onopen = (e => this.onWebSocketOpen(e));
-        this.client.onmessage = (e => this.onWebSocketMessage(e));
-        this.client.onerror = (e => this.onWebSocketError(e));
-        this.client.onclose = (e => this.onWebSocketClose(e));
-
-        this.sendWebSocket(JSON.stringify({type: "ping", message: "hello"}));
-
-
-        console.log("web socket done");
-    }
-
-    sendWebSocket(message) {
-        if(this.client.readyState !== this.client.OPEN || this.queue.length > 0) {
-            this.queue.push(message);
-            console.log("1", this.queue);
-            if(this.client.readyState === this.client.OPEN) {
-                console.log("2", this.queue);
-                this.queue.forEach(o => {
-                    this.client.send(o);
-                });
-                this.queue = [];
-            }
-        } else {
-            this.client.send(message);
-        }
-
-        
-    }
-
-    onWebSocketError(e) {
-        console.log(e);
-    }
-
-    onWebSocketClose(e) {
-        console.log(e);
-    }
-
-    onWebSocketMessage(e) {
-        console.log(e);
-    }
-
-    onWebSocketOpen(e) {
-        console.log("3", this.queue);
-        this.queue.forEach(o => {
-            this.client.send(o);
-        });
-        this.queue = [];
     }
 
     async webRtcInit() {
@@ -152,15 +94,15 @@ export default class UserChatView extends Component {
 
         const connection = new RTCPeerConnection(configuration);
 
-        const offer = await connection.createOffer();
+        console.log(this.props.route.params);
 
-        await connection.setLocalDescription(offer);
+        if(this.props.route.params.offer) {
+            const offer = await connection.createOffer();
+            
+            await connection.setLocalDescription(offer);
 
-        this.sendWebSocket(JSON.stringify({type: "offer", from: "from", to: "to", message: offer}));
-
-        console.log("send", "offer");
-
-        // send offer
+            WebSocketExt.send(JSON.stringify({type: "offer", from: User.ID, to: this.props.route.params.userid, message: offer}));
+        }
 
         this.setState({
             stream: stream,

@@ -46,6 +46,9 @@ export default class UserListView extends Component {
       if(o.to) {
         const to = this.state.users.get(o.to);
         if(to) {
+          WebSocketExt.onRefresh = null;
+          WebSocketExt.onInvite = null;
+          WebSocketExt.onInvited = null;
           this.props.navigation.navigate("Chat", to);
         }
       }
@@ -65,7 +68,9 @@ export default class UserListView extends Component {
                     if(from) {
                       WebSocketExt.send(JSON.stringify(o));
                       from.offer = true;
-                      
+                      WebSocketExt.onRefresh = null;
+                      WebSocketExt.onInvite = null;
+                      WebSocketExt.onInvited = null;
                       this.props.navigation.navigate("Chat", from);
                     }
                   }},
