@@ -67,6 +67,7 @@ export default class UserChatView extends Component {
     }
 
     onCandidate(o){
+        console.log(this.state.connection);
         this.state.connection.addIceCandidate(o.candidate);
     }
 
@@ -87,6 +88,7 @@ export default class UserChatView extends Component {
     }
 
     onTrack(to, e){
+        console.log("=====================================>", "track");
         this.state.stream = e.streams[0];
     }
 
@@ -115,7 +117,13 @@ export default class UserChatView extends Component {
                 deviceId: videoSourceId
             }
         });
+        this.state.stream = stream;
         const connection = new RTCPeerConnection(configuration);
+        this.state.connection = connection;
+        this.setState({
+            stream: stream,
+            connection: connection,
+        });
         connection.addStream(stream);
 
         connection.onicecandidate = e => this.onIceCandidate(this.props.route.params.userid, e);
@@ -127,10 +135,7 @@ export default class UserChatView extends Component {
         await connection.setLocalDescription(answer);
         console.log("send answer");
 
-        this.setState({
-            stream: stream,
-            connection: connection,
-        });
+
 
         
 
@@ -161,7 +166,13 @@ export default class UserChatView extends Component {
                   deviceId: videoSourceId
                 }
             });
+            this.state.stream = stream;
             const connection = new RTCPeerConnection(configuration);
+            this.state.connection = connection;
+            this.setState({
+                stream: stream,
+                connection: connection,
+            });
             connection.addStream(stream);
 
             connection.onicecandidate = e => this.onIceCandidate(this.props.route.params.userid, e);
@@ -177,8 +188,6 @@ export default class UserChatView extends Component {
                 stream: stream,
                 connection: connection,
             });
-
-            
 
             console.log("web rtc done");
         }
