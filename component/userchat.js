@@ -55,6 +55,7 @@ export default class UserChatView extends Component {
 
     componentDidMount() {
         WebSocketExt.onOffer = (o => this.onOffer(o));
+        WebSocketExt.onAnswer = (o => this.onAnswer(o));
 
         console.log("mount");
         this.webRtcInit()
@@ -69,7 +70,24 @@ export default class UserChatView extends Component {
         this.state.stream = null;
     }
 
+    onIceCandidate(channel, to, e){
+        console.log("onIceCandidate");
+    }
+
+    onIceConnectionStateChange(channel, to, e){
+        
+    }
+
+    onTrack(channel, to, e){
+        this.state.stream = e.streams[0];
+    }
+
+    async onAnswer(o) {
+        await this.state.connection.setRemoteDescription(new RTCSessionDescription(o.message));
+    }
+
     async onOffer(o) {
+
         await this.state.connection.setRemoteDescription(new RTCSessionDescription(o.message));
         const answer = await this.state.connection.createAnswer();
         await this.state.connection.setLocalDescription(answer);
@@ -100,11 +118,21 @@ export default class UserChatView extends Component {
             }
         });
 
+        
+
+
         console.log(stream);
 
         const connection = new RTCPeerConnection(configuration);
 
+
+        // stream.getTracks().forEach(track => connection.addTrack(track, stream));
+
         console.log(this.props.route.params);
+
+        connection.onicecandidate = e => this.onIceCandidate(this.props.route.params.userid, e);
+        connection.oniceconnectionstatechange =  e => this.onIceConnectionStateChange(this.props.route.params.userid, e);
+        connection.ontrack = e => this.onTrack(this.props.route.params.userid, e);
 
         if(this.props.route.params.offer) {
             const offer = await connection.createOffer();

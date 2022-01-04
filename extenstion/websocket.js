@@ -8,6 +8,7 @@ export default class WebSocketExt {
     static onInvite = null;
     static onInvited = null;
     static onOffer = null;
+    static onAnswer = null;
 
 
     static get client() {
@@ -67,6 +68,10 @@ export default class WebSocketExt {
         } else if(json.type === "offer") {
             if(WebSocketExt.onOffer) {
                 WebSocketExt.onOffer(json);
+            }
+        } else if(json.type === "answer") {
+            if(WebSocketExt.onAnswer) {
+                WebSocketExt.onAnswer(json);
             }
         }
     }
