@@ -16,7 +16,7 @@ export default class UserListView extends Component {
     this.limit = 3;
 
     this.state = {
-      users: [],
+      users: new Map(),
     };
   }
 
@@ -25,6 +25,7 @@ export default class UserListView extends Component {
     console.log("mount");
     WebSocketExt.onRefresh = (o => this.fetch());
     WebSocketExt.onInvite = (o => this.onInvite(o));
+    WebSocketExt.onInvited = (o => this.onInvited(o));
 
     WebSocketExt.connect();
   }
@@ -38,6 +39,10 @@ export default class UserListView extends Component {
       User.ID = null;
       this.logout(id);
     }
+  }
+
+  onInvited(o) {
+    this.state.users
   }
 
   onInvite(o) {
@@ -76,11 +81,11 @@ export default class UserListView extends Component {
         .then(response => response.json())
         .then(o => {
             this.offset = this.offset + o.length;
-            this.state.users = [];
+            this.state.users = new Map();
             o.map((value, index) => {
                 // console.log(value);
                 if(value.userid !== User.ID) {
-                  this.state.users.push(value);
+                  this.state.users.set(value.userid, value);
                   this.setState({users: this.state.users});
                 }
             });
