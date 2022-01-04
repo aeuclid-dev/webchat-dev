@@ -23,6 +23,8 @@ export default class UserListView extends Component {
   componentDidMount() {
     this.fetch();
     console.log("mount");
+    WebSocketExt.onRefresh = (o => this.fetch());
+
     WebSocketExt.connect();
   }
 
@@ -38,6 +40,7 @@ export default class UserListView extends Component {
   }
 
   logout(userid){
+    
     fetch(`${Environment.server}/v1/user/logout/${userid}`)
         .then(o => {
             if(o.status !== 200) {
@@ -50,13 +53,14 @@ export default class UserListView extends Component {
   }
 
   fetch() {
+    console.log("fetch");
     fetch(`${Environment.server}/v1/user/list?offset=${this.offset}&limit=${this.limit}`)
         .then(response => response.json())
         .then(o => {
             this.offset = this.offset + o.length;
             this.state.users = [];
             o.map((value, index) => {
-                console.log(value);
+                // console.log(value);
                 if(value.userid !== User.ID) {
                   this.state.users.push(value);
                   this.setState({users: this.state.users});

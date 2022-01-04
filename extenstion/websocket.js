@@ -4,6 +4,7 @@ import User from "../data/user";
 export default class WebSocketExt {
     static _client = null;
     static _queue = [];
+    static onRefresh = null;
 
     static get client() {
         return WebSocketExt._client;
@@ -39,15 +40,21 @@ export default class WebSocketExt {
     }
 
     static onMessage(e) {
-        console.log("message", " => ", e.toString());
+        const json = JSON.parse(e.data);
+
+        if(json.type === "refresh") {
+            if(WebSocketExt.onRefresh) {
+                WebSocketExt.onRefresh(json);
+            }
+        }
     }
 
     static onError(e) {
-        
+        console.log("error");
     }
 
     static onClose(e) {
-
+        console.log("close");
     }
 
     static send(message) {
