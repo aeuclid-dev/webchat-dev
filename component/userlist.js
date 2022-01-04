@@ -42,7 +42,15 @@ export default class UserListView extends Component {
   }
 
   onInvited(o) {
-    this.state.users
+    if(o.result === "ok"){
+      if(o.to) {
+        const to = this.state.users.get(o.to);
+        if(to) {
+          this.props.navigator.navigate("Chat", to);
+        }
+      }
+    }
+    Alert.alert("invitation", "fail");
   }
 
   onInvite(o) {
@@ -86,9 +94,9 @@ export default class UserListView extends Component {
                 // console.log(value);
                 if(value.userid !== User.ID) {
                   this.state.users.set(value.userid, value);
-                  this.setState({users: this.state.users});
                 }
             });
+            this.setState({users: this.state.users});
         })
         .catch(e => console.log(e));
   }
@@ -104,7 +112,7 @@ export default class UserListView extends Component {
                         navigation={this.props.navigation}
                         userid={o.item.userid}>{o.item.text}</UserCardView>);
     };
-    return (<FlatList data={this.state.users}
+    return (<FlatList data={Array.from(this.state.users.values())}
               renderItem={renderItem}
               keyExtractor={item => item.userid}
               onEndReached={()=>this.fetch()}
