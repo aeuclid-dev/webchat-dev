@@ -116,7 +116,7 @@ export default class UserChatView extends Component {
 
         this.setState({
             stream: stream,
-            connection: null,
+            connection: connection,
         })
 
         console.log("web rtc done");
