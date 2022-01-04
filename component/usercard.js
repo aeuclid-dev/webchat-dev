@@ -9,6 +9,7 @@ import postIcon from '../assets/icon/post.png';
 
 import User from "../data/user";
 import Environment from "../data/environment";
+import WebSocketExt from "../extenstion/websocket";
 
 export default class UserCardView extends Component {
   constructor(props){
@@ -16,11 +17,15 @@ export default class UserCardView extends Component {
   }
 
   move(){
-    if(this.props.userid !== User.ID) {
-      this.props.navigation.navigate('Chat', this.props.obj)
-    } else {
-      Alert.alert("Chat", "It's me!");
-    }
+    console.log("invite");
+
+    WebSocketExt.send(JSON.stringify({type: 'invite', user: this.props.userid}));
+
+    // if(this.props.userid !== User.ID) {
+    //   this.props.navigation.navigate('Chat', this.props.obj)
+    // } else {
+    //   Alert.alert("Chat", "It's me!");
+    // }
   }
 
   logout(userid) {

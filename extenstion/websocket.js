@@ -5,6 +5,9 @@ export default class WebSocketExt {
     static _client = null;
     static _queue = [];
     static onRefresh = null;
+    static onInvite = null;
+
+    static onOffer = null;
 
     static get client() {
         return WebSocketExt._client;
@@ -41,10 +44,20 @@ export default class WebSocketExt {
 
     static onMessage(e) {
         const json = JSON.parse(e.data);
+        console.log("message ", "=============================>")
+        console.log(json);
 
         if(json.type === "refresh") {
             if(WebSocketExt.onRefresh) {
                 WebSocketExt.onRefresh(json);
+            }
+        } else if(json.type === "offer") {
+            if(WebSocketExt.onOffer) {
+                WebSocketExt.onOffer(json);
+            }
+        } else if(json.type === "invite") {
+            if(WebSocketExt.onInvite) {
+                WebSocketExt.onInvite(json);
             }
         }
     }
