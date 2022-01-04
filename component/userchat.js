@@ -181,10 +181,10 @@ export default class UserChatView extends Component {
                 <Text style={{color: "white"}}>Video View</Text>
             </View> */}
                 <UserProfileView
-                    username={this.props.route.params.item.username}
-                    profile={{uri: `${Environment.server}${this.props.route.params.item.profile}`}}
-                    picture={{uri: `${Environment.server}${this.props.route.params.item.picture}`}}
-                    userid={this.props.route.params.item.userid}>{this.props.route.params.item.text}</UserProfileView>
+                    username={this.props.route.params.username}
+                    profile={{uri: `${Environment.server}${this.props.route.params.profile}`}}
+                    picture={{uri: `${Environment.server}${this.props.route.params.picture}`}}
+                    userid={this.props.route.params.userid}>{this.props.route.params.text}</UserProfileView>
                 <View style={{flexDirection: "row"}}>
                     <TextInput placeholder="useless placeholder" style={{borderStyle:"solid",
                                                                          borderColor: "black",

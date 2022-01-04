@@ -46,7 +46,7 @@ export default class UserListView extends Component {
       if(o.to) {
         const to = this.state.users.get(o.to);
         if(to) {
-          this.props.navigator.navigate("Chat", to);
+          this.props.navigation.navigate("Chat", to);
         }
       }
     }
@@ -60,7 +60,14 @@ export default class UserListView extends Component {
                   {text: "ok", onPress: () => {
                     o.type = "invited";
                     o.result = "ok";
-                    WebSocketExt.send(JSON.stringify(o));
+                    
+                    let from = this.state.users.get(o.from);
+                    if(from) {
+                      WebSocketExt.send(JSON.stringify(o));
+                      from.offer = true;
+                      
+                      this.props.navigation.navigate("Chat", from);
+                    }
                   }},
                   {text: "cancel", onPress: () => {
                     o.type = "invited";
