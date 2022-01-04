@@ -69,7 +69,7 @@ export default class UserChatView extends Component {
     }
 
     onCandidate(o){
-        console.log(this.connection);
+        // console.log(this.connection);
         if(this.connection) {
             this.connection.addIceCandidate(o.candidate);
         } else {
@@ -139,7 +139,7 @@ export default class UserChatView extends Component {
 
         connection.onicecandidate = e => this.onIceCandidate(this.props.route.params.userid, e);
         connection.oniceconnectionstatechange =  e => this.onIceConnectionStateChange(this.props.route.params.userid, e);
-        connection.ontrack = e => this.onTrack(this.props.route.params.userid, e);
+        // connection.ontrack = e => this.onTrack(this.props.route.params.userid, e);
         connection.onaddstream = e => this.onAddStream(this.props.route.params.userid, e);
         // console.log(o.message);
         await connection.setRemoteDescription(new RTCSessionDescription(o.message));
@@ -184,7 +184,8 @@ export default class UserChatView extends Component {
 
             connection.onicecandidate = e => this.onIceCandidate(this.props.route.params.userid, e);
             connection.oniceconnectionstatechange =  e => this.onIceConnectionStateChange(this.props.route.params.userid, e);
-            connection.ontrack = e => this.onTrack(this.props.route.params.userid, e);
+            // connection.ontrack = e => this.onTrack(this.props.route.params.userid, e);
+            connection.onaddstream = e => this.onAddStream(this.props.route.params.userid, e);
             const offer = await connection.createOffer();
 
             await connection.setLocalDescription(offer);
