@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 
-
 export default class UserProfileView extends Component {
   constructor(props){
     super(props);

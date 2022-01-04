@@ -8,6 +8,7 @@ import bookmarkIcon from '../assets/icon/bookmark.png';
 import postIcon from '../assets/icon/post.png';
 
 import User from "../data/user";
+import Environment from "../data/environment";
 
 export default class UserCardView extends Component {
   constructor(props){

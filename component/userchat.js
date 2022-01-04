@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { View, Text, Image, ScrollView, FlatList, TextInput, Button } from "react-native";
 import UserProfileView from './userprofile';
 
+import Environment from "../data/environment";
+
 import AidenChavez from "../assets/avatar/AidenChavez.png";
 import VincentPorter from "../assets/avatar/VincentPorter.png";
 import ChristianKelly from '../assets/avatar/ChristianKelly.png';
@@ -72,7 +74,7 @@ export default class UserChatView extends Component {
 
     async webSocketInit() {
         console.log("web socket init");
-        this.client = new WebSocket("ws://ec2-13-124-80-213.ap-northeast-2.compute.amazonaws.com:8080/ws");
+        this.client = new WebSocket(Environment.websocketServer);
 
         this.client.onopen = (e => this.onWebSocketOpen(e));
         this.client.onmessage = (e => this.onWebSocketMessage(e));
