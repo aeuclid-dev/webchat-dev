@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Text, Image, ScrollView, FlatList } from "react-native";
+import { View, Text, Image, ScrollView, FlatList, Alert } from "react-native";
 
 import User from "../data/user";
 
@@ -30,7 +30,7 @@ export default class UserListView extends Component {
   }
 
   logout(userid){
-    fetch(`http://ec2-13-124-80-213.ap-northeast-2.compute.amazonaws.com:8080/v1/user/logout/${userid}`)
+    fetch(`${Environment.server}/v1/user/logout/${userid}`)
         .then(o => {
             if(o.status !== 200) {
                 Alert.alert("force logout", "fail");
@@ -43,7 +43,7 @@ export default class UserListView extends Component {
 
   fetch() {
     
-    fetch(`http://ec2-13-124-80-213.ap-northeast-2.compute.amazonaws.com:8080/v1/user/list?offset=${this.offset}&limit=${this.limit}`)
+    fetch(`${Environment.server}/v1/user/list?offset=${this.offset}&limit=${this.limit}`)
         .then(response => response.json())
         .then(o => {
             this.offset = this.offset + o.length;
@@ -57,8 +57,8 @@ export default class UserListView extends Component {
 
   render() {
     const renderItem = (o) => {
-      return (<UserCardView profile={{uri: `http://ec2-13-124-80-213.ap-northeast-2.compute.amazonaws.com:8080${o.item.profile}`}}
-                        picture={{uri: `http://ec2-13-124-80-213.ap-northeast-2.compute.amazonaws.com:8080${o.item.picture}`}}
+      return (<UserCardView profile={{uri: `${Environment.server}${o.item.profile}`}}
+                        picture={{uri: `${Environment.server}${o.item.picture}`}}
                         username={o.item.username}
                         index={o.index}
                         key={o.index}
@@ -68,7 +68,7 @@ export default class UserListView extends Component {
     };
     return (<FlatList data={this.state.users}
               renderItem={renderItem}
-              keyExtractor={item => item.index}
+              keyExtractor={item => item.userid}
               onEndReached={()=>this.fetch()}
               onEndReachedThreshold={1}>
     </FlatList>);

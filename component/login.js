@@ -5,6 +5,7 @@ import UserView from "./user";
 
 import { users } from "../data/users";
 import User from "../data/user";
+import Environment from "../data/environment";
 
 export default class LoginView extends Component {
     constructor(props) {
@@ -19,7 +20,7 @@ export default class LoginView extends Component {
     }
 
     logout(userid){
-        fetch(`http://ec2-13-124-80-213.ap-northeast-2.compute.amazonaws.com:8080/v1/user/logout/${userid}`)
+        fetch(`${Environment.server}/v1/user/logout/${userid}`)
             .then(o => {
                 if(o.status !== 200) {
                     Alert.alert("force logout", "fail");
@@ -31,7 +32,7 @@ export default class LoginView extends Component {
     }
 
     login(userid) {
-        fetch(`http://ec2-13-124-80-213.ap-northeast-2.compute.amazonaws.com:8080/v1/user/login/${userid}`)
+        fetch(`${Environment.server}/v1/user/login/${userid}`)
             .then(o => {
                 console.log(o.status);
                 if(o.status === 200) {
@@ -63,7 +64,7 @@ export default class LoginView extends Component {
 
         return (<FlatList data={users}
                   renderItem={renderItem}
-                  keyExtractor={item => item.index}>
+                  keyExtractor={item => item.userid}>
         </FlatList>);
       }
 }

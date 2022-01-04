@@ -180,8 +180,8 @@ export default class UserChatView extends Component {
             </View> */}
                 <UserProfileView
                     username={this.props.route.params.item.username}
-                    profile={{uri: `http://ec2-13-124-80-213.ap-northeast-2.compute.amazonaws.com:8080${this.props.route.params.item.profile}`}}
-                    picture={{uri: `http://ec2-13-124-80-213.ap-northeast-2.compute.amazonaws.com:8080${this.props.route.params.item.picture}`}}
+                    profile={{uri: `${Environment.server}${this.props.route.params.item.profile}`}}
+                    picture={{uri: `${Environment.server}${this.props.route.params.item.picture}`}}
                     userid={this.props.route.params.item.userid}>{this.props.route.params.item.text}</UserProfileView>
                 <View style={{flexDirection: "row"}}>
                     <TextInput placeholder="useless placeholder" style={{borderStyle:"solid",
