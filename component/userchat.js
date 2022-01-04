@@ -58,9 +58,11 @@ export default class UserChatView extends Component {
         WebSocketExt.onAnswer = (o => this.onAnswer(o));
 
         console.log("mount");
-        this.webRtcInit()
-            .then(o => console.log(o))
-            .catch(e => console.log(e));
+        if(this.state.stream){
+            this.webRtcInit()
+                .then(o => console.log(o))
+                .catch(e => console.log(e));
+        }
     }
 
     componentWillUnmount() {
@@ -88,15 +90,6 @@ export default class UserChatView extends Component {
 
     async onOffer(o) {
 
-        await this.state.connection.setRemoteDescription(new RTCSessionDescription(o.message));
-        const answer = await this.state.connection.createAnswer();
-        await this.state.connection.setLocalDescription(answer);
-        console.log("send answer");
-        WebSocketExt.send(JSON.stringify({type: 'answer', from: User.ID, to: o.from, message: answer}));
-    }
-
-    async webRtcInit() {
-        console.log("web rtc init");
         const devices = await mediaDevices.enumerateDevices();
         let videoSourceId = null;
         for(let i = 0; i < devices.length; i++) {
@@ -106,49 +99,78 @@ export default class UserChatView extends Component {
                 break;
             }
         }
-
         const stream = await mediaDevices.getUserMedia({
             audio: true,
             video: {
-              width: 480,
-              height: 640,
-              frameRate: 30,
-              facingMode: "user",
-              deviceId: videoSourceId
+                width: 480,
+                height: 640,
+                frameRate: 30,
+                facingMode: "user",
+                deviceId: videoSourceId
             }
         });
-
-        
-
-
-        console.log(stream);
-
         const connection = new RTCPeerConnection(configuration);
-
-
         // stream.getTracks().forEach(track => connection.addTrack(track, stream));
-
-        console.log(this.props.route.params);
 
         connection.onicecandidate = e => this.onIceCandidate(this.props.route.params.userid, e);
         connection.oniceconnectionstatechange =  e => this.onIceConnectionStateChange(this.props.route.params.userid, e);
         connection.ontrack = e => this.onTrack(this.props.route.params.userid, e);
 
-        if(this.props.route.params.offer) {
-            const offer = await connection.createOffer();
-            
-            await connection.setLocalDescription(offer);
-
-            WebSocketExt.send(JSON.stringify({type: "offer", from: User.ID, to: this.props.route.params.userid, message: offer}));
-        }
+        await connection.setRemoteDescription(new RTCSessionDescription(o.message));
+        const answer = await connection.createAnswer();
+        await connection.setLocalDescription(answer);
+        console.log("send answer");
 
         this.setState({
             stream: stream,
             connection: connection,
-        })
+        });
 
-        console.log("web rtc done");
+        WebSocketExt.send(JSON.stringify({type: 'answer', from: User.ID, to: o.from, message: answer}));
+    }
 
+    async webRtcInit() {
+        
+        if(this.props.route.params.offer) {
+            console.log("web rtc init");
+            const devices = await mediaDevices.enumerateDevices();
+            let videoSourceId = null;
+            for(let i = 0; i < devices.length; i++) {
+                const device = devices[i];
+                if(device.kind == "videoinput" && device.facing == "front") {
+                    videoSourceId = device.deviceId;
+                    break;
+                }
+            }
+            const stream = await mediaDevices.getUserMedia({
+                audio: true,
+                video: {
+                  width: 480,
+                  height: 640,
+                  frameRate: 30,
+                  facingMode: "user",
+                  deviceId: videoSourceId
+                }
+            });
+            const connection = new RTCPeerConnection(configuration);
+            // stream.getTracks().forEach(track => connection.addTrack(track, stream));
+
+            connection.onicecandidate = e => this.onIceCandidate(this.props.route.params.userid, e);
+            connection.oniceconnectionstatechange =  e => this.onIceConnectionStateChange(this.props.route.params.userid, e);
+            connection.ontrack = e => this.onTrack(this.props.route.params.userid, e);
+            const offer = await connection.createOffer();
+
+            await connection.setLocalDescription(offer);
+
+            WebSocketExt.send(JSON.stringify({type: "offer", from: User.ID, to: this.props.route.params.userid, message: offer}));
+
+            this.setState({
+                stream: stream,
+                connection: connection,
+            });
+
+            console.log("web rtc done");
+        }
         return "hello";
     }
 
