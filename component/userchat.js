@@ -182,11 +182,6 @@ export default class UserChatView extends Component {
 
             WebSocketExt.send(JSON.stringify({type: "offer", from: User.ID, to: this.props.route.params.userid, message: offer}));
 
-            this.setState({
-                stream: stream,
-                connection: connection,
-            });
-
             console.log("web rtc done");
         }
         return "hello";
