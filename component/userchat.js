@@ -67,15 +67,15 @@ export default class UserChatView extends Component {
     }
 
     onCandidate(o){
-        console.log(this.state.connection);
-        this.state.connection.addIceCandidate(o.candidate);
+        console.log(this.connection);
+        this.connection.addIceCandidate(o.candidate);
     }
 
     componentWillUnmount() {
         console.log("chat", "unmount");
 
-        this.connection = null;
-        this.state.stream = null;
+        // this.connection = null;
+        // this.state.stream = null;
     }
 
     onIceCandidate(to, e){
@@ -93,7 +93,7 @@ export default class UserChatView extends Component {
     }
 
     async onAnswer(o) {
-        await this.state.connection.setRemoteDescription(new RTCSessionDescription(o.message));
+        await this.connection.setRemoteDescription(new RTCSessionDescription(o.message));
     }
 
     async onOffer(o) {
@@ -119,17 +119,16 @@ export default class UserChatView extends Component {
         });
         this.state.stream = stream;
         const connection = new RTCPeerConnection(configuration);
-        this.state.connection = connection;
+        this.connection = connection;
         this.setState({
-            stream: stream,
-            connection: connection,
+            stream: stream
         });
         connection.addStream(stream);
 
         connection.onicecandidate = e => this.onIceCandidate(this.props.route.params.userid, e);
         connection.oniceconnectionstatechange =  e => this.onIceConnectionStateChange(this.props.route.params.userid, e);
         connection.ontrack = e => this.onTrack(this.props.route.params.userid, e);
-        console.log(o.message);
+        // console.log(o.message);
         await connection.setRemoteDescription(new RTCSessionDescription(o.message));
         const answer = await connection.createAnswer();
         await connection.setLocalDescription(answer);
@@ -168,7 +167,7 @@ export default class UserChatView extends Component {
             });
             this.state.stream = stream;
             const connection = new RTCPeerConnection(configuration);
-            this.state.connection = connection;
+            this.connection = connection;
             this.setState({
                 stream: stream,
                 connection: connection,
