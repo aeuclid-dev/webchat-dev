@@ -110,12 +110,13 @@ export default class UserChatView extends Component {
             }
         });
         const connection = new RTCPeerConnection(configuration);
+        connection.addStream(stream);
         // stream.getTracks().forEach(track => connection.addTrack(track, stream));
 
         connection.onicecandidate = e => this.onIceCandidate(this.props.route.params.userid, e);
         connection.oniceconnectionstatechange =  e => this.onIceConnectionStateChange(this.props.route.params.userid, e);
         connection.ontrack = e => this.onTrack(this.props.route.params.userid, e);
-
+        console.log(o.message);
         await connection.setRemoteDescription(new RTCSessionDescription(o.message));
         const answer = await connection.createAnswer();
         await connection.setLocalDescription(answer);
@@ -153,6 +154,7 @@ export default class UserChatView extends Component {
                 }
             });
             const connection = new RTCPeerConnection(configuration);
+            connection.addStream(stream);
             // stream.getTracks().forEach(track => connection.addTrack(track, stream));
 
             connection.onicecandidate = e => this.onIceCandidate(this.props.route.params.userid, e);
