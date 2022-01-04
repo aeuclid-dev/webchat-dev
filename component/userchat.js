@@ -56,6 +56,7 @@ export default class UserChatView extends Component {
     componentDidMount() {
         WebSocketExt.onOffer = (o => this.onOffer(o));
         WebSocketExt.onAnswer = (o => this.onAnswer(o));
+        WebSocketExt.onCandidate = (o => this.onCandidate(o));
 
         console.log("mount");
         if(!this.state.stream){
@@ -65,6 +66,10 @@ export default class UserChatView extends Component {
         }
     }
 
+    onCandidate(o){
+        this.state.connection.addIceCandidate(o.candidate);
+    }
+
     componentWillUnmount() {
         console.log("chat", "unmount");
 
@@ -72,15 +77,16 @@ export default class UserChatView extends Component {
         this.state.stream = null;
     }
 
-    onIceCandidate(channel, to, e){
+    onIceCandidate(to, e){
         console.log("onIceCandidate");
+        WebSocketExt.send(JSON.stringify({type: "candidate", from: User.ID, to, to, candidate: e.candidate}));
     }
 
-    onIceConnectionStateChange(channel, to, e){
+    onIceConnectionStateChange(to, e){
         
     }
 
-    onTrack(channel, to, e){
+    onTrack(to, e){
         this.state.stream = e.streams[0];
     }
 
